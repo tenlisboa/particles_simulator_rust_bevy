@@ -3110,6 +3110,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "particles_simulator_rust_bevy"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "rand 0.9.0",
+]
+
+[[package]]
 name = "paste"
 version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3202,14 +3210,6 @@ dependencies = [
  "rustix",
  "tracing",
  "windows-sys 0.59.0",
-]
-
-[[package]]
-name = "pong_rust_bevy"
-version = "0.1.0"
-dependencies = [
- "bevy",
- "rand 0.9.0",
 ]
 
 [[package]]

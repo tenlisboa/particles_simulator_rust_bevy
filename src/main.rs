@@ -28,7 +28,7 @@ fn setup(mut commands: Commands) {
 }
 
 mod game {
-    use bevy::{color::palettes::css::SILVER, prelude::*};
+    use bevy::{color::palettes::css::SILVER, math::Direction3d, prelude::*};
 
     #[derive(Component)]
     pub struct Particle;
@@ -65,7 +65,7 @@ mod game {
             Mesh3d(particle),
             MeshMaterial3d(particle_material),
             Transform::from_xyz(0., 16., 0.),
-            Velocity(Vec3::ZERO),
+            Velocity(Vec3::new(0.3, 0., 0.1)),
         ));
 
         commands.spawn((

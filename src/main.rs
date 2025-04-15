@@ -14,6 +14,7 @@ fn main() {
         .init_state::<AppStates>()
         .add_systems(Startup, setup)
         .add_systems(OnEnter(AppStates::Run), game::setup_game)
+        .add_systems(Update, game::gravity.run_if(in_state(AppStates::Run)))
         .run();
 }
 fn setup(mut commands: Commands) {
@@ -24,13 +25,16 @@ fn setup(mut commands: Commands) {
 }
 
 mod game {
-    use bevy::{color::palettes::css::SILVER, prelude::*};
+    use bevy::{color::palettes::css::SILVER, math::VectorSpace, prelude::*};
 
     #[derive(Component)]
-    struct Particle;
+    pub struct Particle;
 
     #[derive(Component)]
     struct Floor;
+
+    #[derive(Component, Deref, DerefMut)]
+    pub struct Velocity(Vec3);
 
     pub fn setup_game(
         mut commands: Commands,
@@ -54,7 +58,8 @@ mod game {
             Particle,
             Mesh3d(particle),
             MeshMaterial3d(particle_material),
-            Transform::from_xyz(0., 2., 0.),
+            Transform::from_xyz(0., 16., 0.),
+            Velocity(Vec3::ZERO),
         ));
 
         commands.spawn((
@@ -67,5 +72,19 @@ mod game {
             },
             Transform::from_xyz(8., 16., 8.),
         ));
+    }
+
+    const GRAVITY: f32 = -9.81;
+    const BOUNCE_FACTOR: f32 = 0.7;
+
+    pub fn gravity(
+        mut particles: Query<(&mut Transform, &mut Velocity), With<Particle>>,
+        time: Res<Time>,
+    ) {
+        for (mut particle_transform, mut particle_velocity) in &mut particles {
+            particle_velocity.0.y += GRAVITY * time.delta_secs();
+
+            particle_transform.translation += particle_velocity.0 * time.delta_secs();
+        }
     }
 }
